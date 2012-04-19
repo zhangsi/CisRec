@@ -71,8 +71,8 @@ public class ProbabilisticMatrixFactorization implements RatingPredictor{
 		
 		this.featureNumber = featureNumber;
 		
-		this.userFeatures = new DenseDoubleMatrix2D(userNumber, featureNumber);
-		this.itemFeatures = new DenseDoubleMatrix2D(itemNumber, featureNumber);
+		this.userFeatures = new DenseDoubleMatrix2D(userNumber + 1, featureNumber);
+		this.itemFeatures = new DenseDoubleMatrix2D(itemNumber + 1, featureNumber);
 	}
 	
 	public ProbabilisticMatrixFactorization(Ratings ratings, int featureNumber, double learnRate,
@@ -94,8 +94,8 @@ public class ProbabilisticMatrixFactorization implements RatingPredictor{
 		
 		this.featureNumber = featureNumber;
 		
-		this.userFeatures = new DenseDoubleMatrix2D(userNumber, featureNumber);
-		this.itemFeatures = new DenseDoubleMatrix2D(itemNumber, featureNumber);
+		this.userFeatures = new DenseDoubleMatrix2D(userNumber + 1, featureNumber);
+		this.itemFeatures = new DenseDoubleMatrix2D(itemNumber + 1, featureNumber);
 	}
 	
 	private void initModel(){
@@ -109,7 +109,7 @@ public class ProbabilisticMatrixFactorization implements RatingPredictor{
 		
 		for( int i = 0; i != itemNumber; ++i){
 			for( int f = 0; f != featureNumber; ++f){
-				userFeatures.setQuick(i, f, rand.nextGaussian() * 0.01);
+				itemFeatures.setQuick(i, f, rand.nextGaussian() * 0.01);
 			}
 		}
 	}
@@ -154,6 +154,12 @@ public class ProbabilisticMatrixFactorization implements RatingPredictor{
 	
 	
 	public double predict(int user_id, int item_id, boolean bound){
+		
+		if(user_id >= userFeatures.rows())
+			return this.globalBias;
+		if(item_id >= itemFeatures.rows())
+			return this.globalBias;
+		
 		Algebra algebra = new Algebra();
 		double result = 0;
 		result += globalBias;
