@@ -28,6 +28,7 @@ public class MovielensRatingsReader implements RatingsReader{
 				count++;
 			}
 			System.out.println("read file: " + filePath + " end. The total line number is: " + count);
+			br.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

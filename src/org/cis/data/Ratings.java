@@ -100,11 +100,11 @@ public class Ratings implements DataSet {
 	}
 	
 	public int totalUserNumber(){
-		return users.size();
+		return maxUserId;
 	}
 	
 	public int totalItemNumber(){
-		return items.size();
+		return maxItemId;
 	}
 	
 	public int getMaxRating(){
