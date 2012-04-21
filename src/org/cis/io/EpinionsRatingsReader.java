@@ -4,29 +4,27 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-import org.cis.matrix.SparseBooleanMatrix;
+import org.cis.data.Ratings;
 
-public class EpinionsSparseBooleanMatrixReader implements
-		SparseBooleanMatrixReader {
+public class EpinionsRatingsReader implements RatingsReader{
 
-	public SparseBooleanMatrix read(String filePath) {
-		SparseBooleanMatrix matrix = new SparseBooleanMatrix();
+	@Override
+	public Ratings read(String filePath) {
+		Ratings ratings = new Ratings();
 		
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(filePath));
 			String line;
 			String[] words;
-			int u,i;
+			int u,i,r;
 			
 			int count = 0;
 			while( (line = br.readLine()) != null){
-				line = line.substring(1);
-				words = line.split(" ");
+				words = line.split("\t");
 				u = Integer.parseInt(words[0]);
 				i = Integer.parseInt(words[1]);
-				System.out.println(u);
-				System.out.println(i);
-				matrix.addEntry(u, i);
+				r = Integer.parseInt(words[2]);
+				ratings.addRating(u, i, r);
 				count++;
 			}
 			System.out.println("read file: " + filePath + " end. The total line number is: " + count);
@@ -34,7 +32,7 @@ public class EpinionsSparseBooleanMatrixReader implements
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return matrix;
+		return ratings;
 	}
 
 }

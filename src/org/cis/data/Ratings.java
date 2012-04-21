@@ -58,7 +58,6 @@ public class Ratings implements DataSet {
 		indexByUser = new ArrayList<ArrayList<Integer>>();
 		for (int u = 0; u <= maxUserId; u++)
 			indexByUser.add(new ArrayList<Integer>());
-
 		// one pass over the data
 		for (int index = 0; index < count; index++)
 			indexByUser.get(users.get(index)).add(index);
@@ -90,6 +89,16 @@ public class Ratings implements DataSet {
 			if(users.get(index) == user_id && items.get(index) == item_id)
 				return index;
 		return -1;
+	}
+	
+	public ArrayList<ArrayList<Integer>> getIndicesByUser(){
+		BuildUserIndices();
+		return this.indexByUser;
+	}
+	
+	public ArrayList<ArrayList<Integer>> getIndicesByItem(){
+		BuildItemIndices();
+		return this.indexByItem;
 	}
 	
 	public double averageRating(){
@@ -134,5 +143,11 @@ public class Ratings implements DataSet {
 	
 	public int getRating(int index){
 		return values.get(index);
+	}
+	
+	public void clear(){
+		users.clear();
+		items.clear();
+		values.clear();
 	}
 }

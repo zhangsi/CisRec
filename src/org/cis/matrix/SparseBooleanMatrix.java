@@ -12,11 +12,11 @@ public class SparseBooleanMatrix implements BooleanMatrix{
 	int maxColumn;
 	int count;
 	
-	void SparseBoleanMatrix() {
+	public SparseBooleanMatrix() {
 		this.row_list = new ArrayList<HashSet<Integer>>();
 		this.count = 0;
 		this.maxColumn = Integer.MIN_VALUE;
-		this.maxRow    = Integer.MAX_VALUE;
+		this.maxRow    = Integer.MIN_VALUE;
 	}
 	
 	public void setRow( int row){
