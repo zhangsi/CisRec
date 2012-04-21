@@ -10,35 +10,35 @@ import cern.colt.matrix.linalg.Algebra;
 
 public class BiasedProbabilisticMatrixFactorization implements RatingPredictor{
 	
-	private DenseDoubleMatrix2D userFeatures;
-	private DenseDoubleMatrix2D itemFeatures;
+	DenseDoubleMatrix2D userFeatures;
+	DenseDoubleMatrix2D itemFeatures;
 	
-	private double[] userBias;
-	private double[] itemBias;
+	double[] userBias;
+	double[] itemBias;
 	
-	private Ratings ratings;
-	private int maxRating;
-	private int minRating;
+	Ratings ratings;
+	int maxRating;
+	int minRating;
 	
-	private int trainNumber;
+	int trainNumber;
 	
-	private double globalBias;
-	private double ratingRange;
-	private double globalAvg;
+	double globalBias;
+	double ratingRange;
+	double globalAvg;
 	
-	private double learnRate;
-	private double userReg;
-	private double itemReg;
+	double learnRate;
+	double userReg;
+	double itemReg;
 	
-	private double biasLearnRate;
-	private double biasUserReg;
-	private double biasItemReg;
+	double biasLearnRate;
+	double biasUserReg;
+	double biasItemReg;
 	
-	private int featureNumber;
-	private int maxIterNumber;
+	int featureNumber;
+	int maxIterNumber;
 	
-	private int userNumber;
-	private int itemNumber;
+	int userNumber;
+	int itemNumber;
 	
 	/**
 	 * @param learnRate the learnRate to set
@@ -182,13 +182,13 @@ public class BiasedProbabilisticMatrixFactorization implements RatingPredictor{
 		learnFeatures();
 	}
 	
-	public void learnFeatures(){
+	private void learnFeatures(){
 		for(int iter = 1; iter <= maxIterNumber; ++iter){
 			iterate(ratings.getRandomIndex());
 		}
 	}
 	
-	public void iterate(ArrayList<Integer> list){
+	private void iterate(ArrayList<Integer> list){
 		
 		int user_id, item_id, rating;
 		double err, score, sig_score, prediction, gradient;

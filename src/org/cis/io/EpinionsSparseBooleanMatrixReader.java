@@ -9,7 +9,6 @@ import org.cis.matrix.SparseBooleanMatrix;
 public class EpinionsSparseBooleanMatrixReader implements
 		SparseBooleanMatrixReader {
 
-	@Override
 	public SparseBooleanMatrix read(String filePath) {
 		SparseBooleanMatrix matrix = new SparseBooleanMatrix();
 		
