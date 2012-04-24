@@ -12,11 +12,21 @@ public class SparseBooleanMatrix implements BooleanMatrix{
 	int maxColumn;
 	int count;
 	
-	public SparseBooleanMatrix() {
+	int dim1;
+	int dim2;
+	
+	public SparseBooleanMatrix(int dim1, int dim2) {
 		this.row_list = new ArrayList<HashSet<Integer>>();
 		this.count = 0;
 		this.maxColumn = Integer.MIN_VALUE;
 		this.maxRow    = Integer.MIN_VALUE;
+		this.dim1 = dim1;
+		this.dim2 = dim2;
+		
+		for(int d = 0; d != dim1; ++d){
+			row_list.add(new HashSet<Integer>());
+		}
+
 	}
 	
 	public void setRow( int row){
@@ -48,11 +58,8 @@ public class SparseBooleanMatrix implements BooleanMatrix{
 	}
 	
 	public void addEntry(int r ,int c) {
-		if( r > maxRow){
-			row_list.add( new HashSet<Integer> ());
-		}else{
-			row_list.get(r).add(c);
-		}
+
+		row_list.get(r).add(c);
 		
 		count++;
 		
@@ -63,7 +70,7 @@ public class SparseBooleanMatrix implements BooleanMatrix{
 	}
 	
 	public SparseBooleanMatrix transpose() {
-		SparseBooleanMatrix matrix = new SparseBooleanMatrix();
+		SparseBooleanMatrix matrix = new SparseBooleanMatrix(dim2, dim1);
 		
 		matrix.count = this.count;
 		matrix.setColumn(this.maxColumn);
@@ -81,7 +88,7 @@ public class SparseBooleanMatrix implements BooleanMatrix{
 	
 	@Override
 	public ArrayList<Integer> getRow(int r) {
-		if( r > maxRow)
+		if( r > dim1)
 			return null;
 		return new ArrayList<Integer>(row_list.get(r));
 	}

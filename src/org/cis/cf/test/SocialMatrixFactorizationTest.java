@@ -1,20 +1,21 @@
 package org.cis.cf.test;
 
+
 import org.cis.cf.algorithm.SocialMatrixFactorization;
 import org.cis.data.Ratings;
 import org.cis.eval.RmseEvaluator;
+import org.cis.io.EpinionsRatingsReader;
 import org.cis.io.EpinionsSparseBooleanMatrixReader;
-import org.cis.io.MovielensRatingsReader;
 import org.cis.matrix.SparseBooleanMatrix;
 
 public class SocialMatrixFactorizationTest {
 	public static void main(String args[]){
 		
 		
-		//command: java org.cis.cf.test.SocialMatrixFactorizationTes ../data/epinions/train ../data/epinions/test 10 0.01 0.01 0.01 1 0.01 0.01 25 ../data/epinions/trust_data.txt 0.1
+		//command: java org.cis.cf.test.SocialMatrixFactorizationTes ../data/epinions/train ../data/epinions/test 10 0.01 0.01 0.01 1 0.01 0.01 25 ../data/epinions/trust_data.txt 0.1 49290
 		
 		
-		if(args.length != 12){
+		if(args.length != 13){
 			System.out.println("Useage:");
 			System.out.println("1, Training data path");
 			System.out.println("2, Test data path");
@@ -28,6 +29,7 @@ public class SocialMatrixFactorizationTest {
 			System.out.println("10, Max round of training");
 			System.out.println("11, Social relations data path");
 			System.out.println("12, Social regularization");
+			System.out.println("13, user number");
 		} else {
 			String trainFile = args[0];
 			String testFile = args[1];
@@ -47,12 +49,15 @@ public class SocialMatrixFactorizationTest {
 			String socialFile = args[10];
 			double socialReg  = Double.parseDouble(args[11]);
 			
-			MovielensRatingsReader reader = new MovielensRatingsReader();
+			int userNumber = Integer.parseInt(args[12]);
+			
+			EpinionsRatingsReader reader = new EpinionsRatingsReader();
 			Ratings trainData  = reader.read(trainFile);
 			Ratings testData   = reader.read(testFile);
 			
 			EpinionsSparseBooleanMatrixReader social_reader = new EpinionsSparseBooleanMatrixReader();
-			SparseBooleanMatrix social_matrix = social_reader.read(socialFile);
+			SparseBooleanMatrix social_matrix = social_reader.read(socialFile, userNumber+1, userNumber+1);
+			
 			
 			SocialMatrixFactorization recommender = new SocialMatrixFactorization(
 					trainData,
@@ -72,6 +77,7 @@ public class SocialMatrixFactorizationTest {
 			
 			RmseEvaluator evaluator = new RmseEvaluator();
 			System.out.println(evaluator.evaluate(recommender, testData));
+			System.out.println(evaluator.evaluate(recommender, trainData));
 		}
 	}
 }

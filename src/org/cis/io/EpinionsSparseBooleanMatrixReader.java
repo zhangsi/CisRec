@@ -9,8 +9,8 @@ import org.cis.matrix.SparseBooleanMatrix;
 public class EpinionsSparseBooleanMatrixReader implements
 		SparseBooleanMatrixReader {
 
-	public SparseBooleanMatrix read(String filePath) {
-		SparseBooleanMatrix matrix = new SparseBooleanMatrix();
+	public SparseBooleanMatrix read(String filePath, int dim1, int dim2) {
+		SparseBooleanMatrix matrix = new SparseBooleanMatrix(dim1, dim2);
 		
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(filePath));
@@ -24,8 +24,6 @@ public class EpinionsSparseBooleanMatrixReader implements
 				words = line.split(" ");
 				u = Integer.parseInt(words[0]);
 				i = Integer.parseInt(words[1]);
-				System.out.println(u);
-				System.out.println(i);
 				matrix.addEntry(u, i);
 				count++;
 			}

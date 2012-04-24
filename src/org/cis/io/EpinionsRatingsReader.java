@@ -20,7 +20,7 @@ public class EpinionsRatingsReader implements RatingsReader{
 			
 			int count = 0;
 			while( (line = br.readLine()) != null){
-				words = line.split("\t");
+				words = line.split(" ");
 				u = Integer.parseInt(words[0]);
 				i = Integer.parseInt(words[1]);
 				r = Integer.parseInt(words[2]);

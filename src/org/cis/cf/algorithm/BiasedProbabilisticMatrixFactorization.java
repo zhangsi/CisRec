@@ -177,7 +177,6 @@ public class BiasedProbabilisticMatrixFactorization implements RatingPredictor{
 	}
 	
 	public void trainModel(){
-		
 		initModel();
 		learnFeatures();
 	}
@@ -203,22 +202,22 @@ public class BiasedProbabilisticMatrixFactorization implements RatingPredictor{
 			      + algebra.mult(userFeatures.viewRow(user_id), itemFeatures.viewRow(item_id));
 			sig_score = 1 / (1 + Math.exp(-score));
 			prediction = minRating + sig_score * ratingRange;
-			err = rating - prediction;
+			err = prediction - rating;
 			gradient = err * sig_score * ( 1 - sig_score ) * ratingRange;
 			
-			userBias[user_id] += biasLearnRate * learnRate * (gradient - biasUserReg  * userBias[user_id]);
-			itemBias[item_id] += biasLearnRate * learnRate * (gradient - biasItemReg  * itemBias[item_id]);
+			userBias[user_id] -= biasLearnRate * learnRate * (gradient + biasUserReg  * userBias[user_id]);
+			itemBias[item_id] -= biasLearnRate * learnRate * (gradient + biasItemReg  * itemBias[item_id]);
 			
 			// update factors
 			for(int f = 0;  f != featureNumber; ++f){
 				double u_f = userFeatures.getQuick(user_id, f);
 				double i_f = itemFeatures.getQuick(item_id, f);
 				
-				double delta_u = gradient * i_f - userReg * u_f;
-				userFeatures.setQuick(user_id, f, userFeatures.getQuick(user_id, f) + learnRate * delta_u);
+				double delta_u = gradient * i_f + userReg * u_f;
+				userFeatures.setQuick(user_id, f, userFeatures.getQuick(user_id, f) - learnRate * delta_u);
 				
-				double delta_i = gradient * u_f - itemReg * i_f;
-				itemFeatures.setQuick(item_id, f, itemFeatures.getQuick(item_id, f) + learnRate * delta_i);
+				double delta_i = gradient * u_f + itemReg * i_f;
+				itemFeatures.setQuick(item_id, f, itemFeatures.getQuick(item_id, f) - learnRate * delta_i);
 			}
 		}
 	}

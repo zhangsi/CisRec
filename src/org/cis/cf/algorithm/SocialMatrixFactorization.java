@@ -31,9 +31,10 @@ public class SocialMatrixFactorization extends BiasedProbabilisticMatrixFactoriz
 		this.user_connections = user_connections;
 		this.user_reverse_connections = user_connections.transpose();
 		this.socialReg = socialReg;
+
 	}
 	
-	private void initModel() {
+	private void initModel(){
 		Random rand = new Random();
 		
 		for( int u = 0; u != userNumber; ++u){
@@ -62,6 +63,7 @@ public class SocialMatrixFactorization extends BiasedProbabilisticMatrixFactoriz
 		learnFeatures();
 	}
 	
+	
 	private void iterate(ArrayList<Integer> list){
 		DenseDoubleMatrix2D user_factors_gradient = new DenseDoubleMatrix2D( userNumber + 1, featureNumber);
 		DenseDoubleMatrix2D item_factors_gradient = new DenseDoubleMatrix2D( itemNumber + 1, featureNumber);
@@ -70,12 +72,17 @@ public class SocialMatrixFactorization extends BiasedProbabilisticMatrixFactoriz
 			
 		double [] user_bias_gradient    = new double[userNumber + 1];
 		double [] item_bias_gradient    = new double[itemNumber + 1];
+		for( int u = 0; u != user_bias_gradient.length; ++u)
+			user_bias_gradient[u] = 0;
+		for( int i = 0; i != item_bias_gradient.length; ++i)
+			item_bias_gradient[i] = 0;
+		
 		
 		int index;
 		int user_id, item_id, rating;
 		double err, score, sig_score, prediction, gradient;
 		Algebra algebra = new Algebra();
-		for( index = 0; index != trainNumber; ++index){
+		for(index = 0; index != trainNumber; ++index){
 			
 			user_id = ratings.getUser(index);
 			item_id = ratings.getItem(index);
@@ -85,9 +92,9 @@ public class SocialMatrixFactorization extends BiasedProbabilisticMatrixFactoriz
 			      + algebra.mult(userFeatures.viewRow(user_id), itemFeatures.viewRow(item_id));
 			sig_score = 1 / (1 + Math.exp(-score));
 			prediction = minRating + sig_score * ratingRange;
-			err = rating - prediction;
+			err =  prediction - rating;
 			gradient = err * sig_score * ( 1 - sig_score ) * ratingRange;
-			
+
 			user_bias_gradient[user_id] += gradient;
 			item_bias_gradient[item_id] += gradient;
 			

@@ -3,6 +3,7 @@ package org.cis.cf.test;
 import org.cis.cf.algorithm.BiasedProbabilisticMatrixFactorization;
 import org.cis.data.Ratings;
 import org.cis.eval.RmseEvaluator;
+import org.cis.io.EpinionsRatingsReader;
 import org.cis.io.MovielensRatingsReader;
 
 public class BiasedProbabilisticMatrixFactorizationTest {
@@ -40,7 +41,8 @@ public class BiasedProbabilisticMatrixFactorizationTest {
 			
 			int maxIter = Integer.parseInt(args[9]);
 			
-			MovielensRatingsReader read = new MovielensRatingsReader();
+			//MovielensRatingsReader read = new MovielensRatingsReader();
+			EpinionsRatingsReader read = new EpinionsRatingsReader();
 			Ratings trainData  = read.read(trainFile);
 			Ratings testData   = read.read(testFile);
 			
@@ -60,6 +62,7 @@ public class BiasedProbabilisticMatrixFactorizationTest {
 			
 			RmseEvaluator evaluator = new RmseEvaluator();
 			System.out.println(evaluator.evaluate(recommender, testData));
+			System.out.println(evaluator.evaluate(recommender, trainData));
 		}
 	}
 }
