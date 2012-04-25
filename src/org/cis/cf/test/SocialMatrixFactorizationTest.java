@@ -12,7 +12,7 @@ public class SocialMatrixFactorizationTest {
 	public static void main(String args[]){
 		
 		
-		//command: java org.cis.cf.test.SocialMatrixFactorizationTes ../data/epinions/train ../data/epinions/test 10 0.01 0.01 0.01 1 0.01 0.01 25 ../data/epinions/trust_data.txt 0.1 49290
+		//command: java org.cis.cf.test.SocialMatrixFactorizationTes ../data/epinions/ratings_data_training.txt ../data/epinions/ratings_data_testing.txt 10 0.01 0.1 0.1 1 0.1 0.1 25 ../data/epinions/trust_data.txt 1 49290
 		
 		
 		if(args.length != 13){
@@ -77,7 +77,6 @@ public class SocialMatrixFactorizationTest {
 			
 			RmseEvaluator evaluator = new RmseEvaluator();
 			System.out.println(evaluator.evaluate(recommender, testData));
-			System.out.println(evaluator.evaluate(recommender, trainData));
 		}
 	}
 }
