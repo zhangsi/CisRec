@@ -1,1 +1,29 @@
-this is readme file
+CisRec is a free recommender system toolkit for rating prediction task such as netflix prize.
+The implemented algorithms include:
+
+(1) Probabilistic Matrix Factorization
+	Salakhutdinov, R., & Mnih, A. (2008). Probabilistic matrix factorization. 
+	Advances in Neural Information Processing Systems 20. Cambridge, MA: MIT Press
+	http://www.cs.utoronto.ca/~amnih/papers/pmf.pdf	
+	
+	
+(2) SVD++
+	Yehuda Koren., Factorization meets the neighborhood: A multifaceted collaborative filtering model. 
+	In Proceedings of the 14th ACM SIGKDD International Conference on
+	Knowledge Discovery and Data Mining (KDD'08) (2008), 426¨C434.
+	http://public.research.att.com/~volinsky/netflix/kdd08koren.pdf
+	
+	
+(3) Restricted Boltzmann Machines
+	Salakhutdinov, R., Mnih, A. Hinton, G, Restricted BoltzmanMachines for Collaborative Filtering, 
+	To appear inProceedings of the 24thInternational Conference onMachine Learning 2007.
+	http://www.cs.toronto.edu/~rsalakhu/papers/rbmcf.pdf
+	
+	
+(4) Probabilistic Latent Semantic Analysis
+	T. Hofmann, Latent Semantic Models for Collaborative Filtering,
+	ACM Transactions on Information Systems 22 (2004), 89¨C115.
+	http://comminfo.rutgers.edu/~muresan/IR/Docs/Articles/toisHofmann2004.pdf
+	
+others: biased baseline, global average, user average, item average and the variants of (1)(2)(3)(4)
+	
