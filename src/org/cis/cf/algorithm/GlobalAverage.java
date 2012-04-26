@@ -17,7 +17,6 @@ public class GlobalAverage implements RatingPredictor{
 		return this.globalBias;
 	}
 
-	@Override
 	public void trainModel() {
 		this.globalBias = ratings.averageRating();
 	}

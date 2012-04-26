@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import org.cis.data.Ratings;
-import org.cis.util.ZeroSetter;
+import org.cis.util.*;
 
 
-public class RestrictedBoltzmannMachines implements RatingPredictor {
+public class RestrictedBoltzmannMachines implements RatingPredictor{
 
 	Ratings ratings;
 	Ratings testRatings;
@@ -198,7 +198,6 @@ public class RestrictedBoltzmannMachines implements RatingPredictor {
 		}
 	}
 	
-	@Override
 	public void trainModel() {
 		
 		initModel();
@@ -545,11 +544,13 @@ public class RestrictedBoltzmannMachines implements RatingPredictor {
 		System.out.println("Train Rmse: " + Math.sqrt(nrmse / tc) + "		Test Rmse: " + Math.sqrt(prmse / pc));
 		
 	}
-	
+
+
 	@Override
 	public double predict(int user_id, int item_id, boolean bound) {
-		
+		// TODO Auto-generated method stub
 		return 0;
 	}
+	
 	
 }

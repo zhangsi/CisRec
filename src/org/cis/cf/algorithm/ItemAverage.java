@@ -29,7 +29,6 @@ public class ItemAverage implements RatingPredictor{
 		}	
 	}
 	
-	@Override
 	public void trainModel() {
 		int index;
 		int item_id, rating;

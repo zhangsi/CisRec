@@ -119,7 +119,6 @@ public class ProbabilisticLatentSemanticAnalysis implements RatingPredictor {
 		}
 	}
 	
-	@Override
 	public void trainModel() {
 		initModel();
 		learnParameters();
