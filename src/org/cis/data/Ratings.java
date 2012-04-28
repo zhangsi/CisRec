@@ -101,6 +101,26 @@ public class Ratings implements DataSet {
 		return this.indexByItem;
 	}
 	
+	public ArrayList<Integer> getItemsByUser(int user_id){
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		for( int i = 0; i != count; ++i){
+			if(users.get(i) == user_id){
+				list.add(items.get(i));
+			}
+		}
+		return list;
+	}
+	
+	public ArrayList<Integer> getUsersByItem(int item_id){
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		for(int i = 0; i != count; ++i){
+			if(items.get(i) == item_id){
+				list.add(users.get(i));
+			}
+		}
+		return list;
+	}
+	
 	public double averageRating(){
 		double avg = 0;
 		for( int i = 0; i != count; ++i)
