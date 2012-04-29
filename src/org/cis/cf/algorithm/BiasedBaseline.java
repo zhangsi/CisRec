@@ -66,8 +66,7 @@ public class BiasedBaseline implements RatingPredictor {
 		}
 		return result;
 	}
-
-	@Override
+	
 	public void trainModel() {
 		initModel();
 		learnBias();

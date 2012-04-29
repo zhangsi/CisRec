@@ -29,7 +29,6 @@ public class UserAverage implements RatingPredictor{
 		}	
 	}
 	
-	@Override
 	public void trainModel() {
 		int index;
 		int user_id, rating;

@@ -22,8 +22,17 @@ The implemented algorithms include:
 	
 (4) Probabilistic Latent Semantic Analysis
 	T. Hofmann, Latent Semantic Models for Collaborative Filtering,
-	ACM Transactions on Information Systems 22 (2004), 89¨C115.
+	ACM Transactions on Information Systems 22 (2004), 89C115.
 	http://comminfo.rutgers.edu/~muresan/IR/Docs/Articles/toisHofmann2004.pdf
-	
+
+
+(5) Alternating Least Squares
+	Yunhong Zhou, Dennis Wilkinson, Robert Schreiber and Rong Pan. 
+	Large-Scale Parallel Collaborative Filtering for the Netflix Prize. 
+	Proceedings of the 4th international conference on Algorithmic Aspects in Information and Management.
+	Shanghai, China pp. 337-348, 2008.
+	http://www.hpl.hp.com/personal/Robert_Schreiber/papers/2008%20AAIM%20Netflix/netflix_aaim08(submitted).pdf
+
+
 others: biased baseline, global average, user average, item average and the variants of (1)(2)(3)(4)
 	
