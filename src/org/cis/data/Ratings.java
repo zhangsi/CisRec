@@ -170,4 +170,5 @@ public class Ratings implements DataSet {
 		items.clear();
 		values.clear();
 	}
+	
 }
