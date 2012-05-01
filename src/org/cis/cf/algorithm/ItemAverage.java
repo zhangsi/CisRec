@@ -6,15 +6,25 @@ import org.cis.data.Ratings;
 
 public class ItemAverage implements RatingPredictor{
 
-	private Ratings ratings;
-	private int itemNumber;
-	private int trainNumber;
+	/** training data set of ratings */
+	Ratings ratings;
+	/** number of items */
+	int itemNumber;
+	/** number of training ratings */
+	int trainNumber;
 	
-	private ArrayList<Integer> itemRatingSum;
-	private ArrayList<Integer> itemRatingCount;
+	/** the sum of ratings for each item */
+	ArrayList<Integer> itemRatingSum;
+	/** the count of ratings for each item */
+	ArrayList<Integer> itemRatingCount;
+	/** global rating average */ 
+	double globalBias;
 	
-	private double globalBias;
-	
+	/**
+	 * Construct ItemAverage algorithm
+	 * 
+	 * @param ratings training ratings
+	 */
 	public ItemAverage(Ratings ratings) {
 		this.ratings     = ratings;
 		this.itemNumber  = ratings.totalItemNumber();
@@ -29,6 +39,9 @@ public class ItemAverage implements RatingPredictor{
 		}	
 	}
 	
+	/**
+	 * Train the model of Item Average
+	 */
 	public void trainModel() {
 		int index;
 		int item_id, rating;
@@ -41,7 +54,9 @@ public class ItemAverage implements RatingPredictor{
 		}
 	}
 
-	@Override
+	/**
+	 * Predict the rating value with given user and item
+	 */
 	public double predict(int user_id, int item_id, boolean bound) {
 		
 		if(item_id >= itemNumber)
