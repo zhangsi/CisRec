@@ -7,19 +7,39 @@ import java.util.Random;
 import org.cis.data.Ratings;
 import org.cis.util.*;
 
-
+/**
+ * This class implementing Restricted Boltzmann Machines for Collaborative Filtering
+ * 
+ * The origin paper:
+ * 
+ * Salakhutdinov, R., Mnih, A. Hinton, G, Restricted BoltzmanMachines for Collaborative Filtering, 
+ * To appear inProceedings of the 24thInternational Conference onMachine Learning 2007.
+ * http://www.cs.toronto.edu/~rsalakhu/papers/rbmcf.pdf
+ * 
+ * @author Zhang Si (zhangsi.cs@gmail.com)
+ *
+ */
 public class RestrictedBoltzmannMachines implements RatingPredictor{
 
+	/** training data set of ratings */
 	Ratings ratings;
+	/** test data set of ratings */
 	Ratings testRatings;
+	
+	/** user number */
 	int userNumber;
+	/** item number */
 	int itemNumber;
 	
+	/** number of latent factors in hidden layer */
 	int featureNumber;
+	/** 5 */
 	int softmax;
 	
+	/** max iteration number */
 	int maxIter;
 	
+	/** learning rate for parameters */
 	double epsilonw;
 	double epsilonvb;
 	double epsilonhb;
@@ -27,10 +47,14 @@ public class RestrictedBoltzmannMachines implements RatingPredictor{
 	double momentum;
 	double finalMomentum;
 	
+	/** training data set indexed by user */
 	int[][] trainSet;
+	
+	/** test data set indexed by user */
 	ArrayList<Integer>[] testSet;
 
 	
+	/** model parameters */
 	double[][][] weights;
 	double[][]   visbiases;
 	double[]     hidbiases;
@@ -55,7 +79,21 @@ public class RestrictedBoltzmannMachines implements RatingPredictor{
 	char[]   negvissoftmax;
 	int[] moviecount;
 	
-	@SuppressWarnings("unchecked")
+	/**
+	 * Construct RBM algorithm 
+	 * 
+	 * @param ratings
+	 * @param testRatings
+	 * @param featureNumber
+	 * @param softmax
+	 * @param maxIter
+	 * @param epsilonw
+	 * @param epsilonvb
+	 * @param epsilonhb
+	 * @param weightCost
+	 * @param momentum
+	 * @param finalMomentum
+	 */
 	public RestrictedBoltzmannMachines(
 			Ratings ratings,
 			Ratings testRatings,
@@ -117,7 +155,9 @@ public class RestrictedBoltzmannMachines implements RatingPredictor{
 		convertData();
 	}
 	
-	
+	/**
+	 * Convert training data and test data from Ratings to user indexed form
+	 */
 	private void convertData() {
 		ArrayList<ArrayList<Integer>> userList = ratings.getIndicesByUser();
 		for( int u = 0; u != userNumber; ++u){
@@ -152,7 +192,9 @@ public class RestrictedBoltzmannMachines implements RatingPredictor{
 		testUserList.clear();
 	}
 	
-	
+	/**
+	 * Init model parameters
+	 */
 	private void initModel(){
 		int[][] moviecount = new int[itemNumber][softmax];
 		ZeroSetter.zero(moviecount, itemNumber, softmax);
@@ -198,6 +240,9 @@ public class RestrictedBoltzmannMachines implements RatingPredictor{
 		}
 	}
 	
+	/** 
+	 * Train RBM model
+	 */
 	public void trainModel() {
 		
 		initModel();
@@ -355,6 +400,12 @@ public class RestrictedBoltzmannMachines implements RatingPredictor{
 		
 	}
 	
+	/**
+	 * Update parameters
+	 * 
+	 * @param user
+	 * @param num
+	 */
 	private void update(int user, int num) {
 		
 		/** Update weights and biases */
@@ -412,6 +463,11 @@ public class RestrictedBoltzmannMachines implements RatingPredictor{
 		 }
 	}
 	
+	/**
+	 * Set the argument of the RBM model
+	 * 
+	 * @param loopcount
+	 */
 	private void setArgument(int loopcount) {
 		if(featureNumber == 200) {
 			 if ( loopcount > 6 ) {
@@ -443,6 +499,10 @@ public class RestrictedBoltzmannMachines implements RatingPredictor{
 			 }
 		}
 	}
+	
+	/**
+	 * Set the model parameters to zero
+	 */
 	private void Zero() {
 		ZeroSetter.zero(CDpos, itemNumber, softmax, featureNumber);
 		ZeroSetter.zero(CDneg, itemNumber, softmax, featureNumber);
@@ -453,6 +513,9 @@ public class RestrictedBoltzmannMachines implements RatingPredictor{
 		ZeroSetter.zero(moviecount, itemNumber);
 	}
 	
+	/**
+	 * Calculate RMSE for training data and test data 
+	 */
 	private void rmse() {
 		double nrmse = 0, prmse = 0;
 		int tc = 0,pc = 0; 
@@ -546,7 +609,9 @@ public class RestrictedBoltzmannMachines implements RatingPredictor{
 	}
 
 
-	@Override
+	/**
+	 * Predict the rating value with given user_id and item_id
+	 */
 	public double predict(int user_id, int item_id, boolean bound) {
 		// TODO Auto-generated method stub
 		return 0;

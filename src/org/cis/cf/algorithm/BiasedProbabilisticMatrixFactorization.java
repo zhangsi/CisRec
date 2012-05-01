@@ -9,40 +9,63 @@ import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import cern.colt.matrix.linalg.Algebra;
 
 /**
+ * The class combine the BiasedBaseline and PMF algorithm
  * 
  * @author Zhang Si (zhangsi.cs@gmail.com)
  *
  */
 public class BiasedProbabilisticMatrixFactorization implements RatingPredictor{
 	
+	/** user factors */
 	DenseDoubleMatrix2D userFeatures;
+	/** item factors */
 	DenseDoubleMatrix2D itemFeatures;
 	
+	/** the user bias parameter */
 	double[] userBias;
+	/** the item bias parameter */
 	double[] itemBias;
 	
+	/** training data set of ratings */
 	Ratings ratings;
+	
+	/** max rating */
 	int maxRating;
+	/** min rating */
 	int minRating;
 	
+	/** number of training ratings */
 	int trainNumber;
 	
+	/** global bias of all the ratings */ 
 	double globalBias;
+	/** rating range from minRating to maxRating */
 	double ratingRange;
+	/** global average of all the ratings */ 
 	double globalAvg;
 	
+	/** learning rate for factor parameters */
 	double learnRate;
+	/** regularization of user factors */
 	double userReg;
+	/** regularization of item factors */
 	double itemReg;
 	
+	/** learning rate for bias parameters */
 	double biasLearnRate;
+	/** regularization of user bias */
 	double biasUserReg;
+	/** regularization of item bias */
 	double biasItemReg;
 	
+	/** number of latent factors */
 	int featureNumber;
+	/** max iteration number */
 	int maxIterNumber;
 	
+	/** number of users */
 	int userNumber;
+	/** number of items */
 	int itemNumber;
 	
 	/**
@@ -101,6 +124,12 @@ public class BiasedProbabilisticMatrixFactorization implements RatingPredictor{
 		this.maxIterNumber = maxIterNumber;
 	}
 	
+	/**
+	 * Construct Biased PMF algorithm
+	 * 
+	 * @param ratings
+	 * @param featureNumber
+	 */
 	public BiasedProbabilisticMatrixFactorization(Ratings ratings, int featureNumber){
 		this.ratings = ratings;
 
@@ -125,6 +154,19 @@ public class BiasedProbabilisticMatrixFactorization implements RatingPredictor{
 		this.itemBias     = new double[itemNumber + 1];
 	}
 	
+	/**
+	 * Construct Biased PMF algorithm
+	 * 
+	 * @param ratings
+	 * @param featureNumber
+	 * @param learnRate
+	 * @param userReg
+	 * @param itemReg
+	 * @param biasLearnRate
+	 * @param biasUserReg
+	 * @param biasItemReg
+	 * @param maxIterNumber
+	 */
 	public BiasedProbabilisticMatrixFactorization(Ratings ratings, int featureNumber,
 			double learnRate, double userReg, double itemReg, 
 			double biasLearnRate, double biasUserReg, double biasItemReg,
@@ -163,6 +205,9 @@ public class BiasedProbabilisticMatrixFactorization implements RatingPredictor{
 		this.itemBias     = new double[itemNumber + 1];
 	}
 	
+	/**
+	 * Init the model parameters
+	 */
 	private void initModel(){
 		Random rand = new Random();
 		
@@ -181,17 +226,27 @@ public class BiasedProbabilisticMatrixFactorization implements RatingPredictor{
 		}
 	}
 	
+	/**
+	 * Train the Biased PMF model
+	 */
 	public void trainModel(){
 		initModel();
 		learnFeatures();
 	}
 	
+	/**
+	 * Update the parameter with given max iteration number
+	 */
 	private void learnFeatures(){
 		for(int iter = 1; iter <= maxIterNumber; ++iter){
 			iterate(ratings.getRandomIndex());
 		}
 	}
 	
+	/**
+	 * In an iteration loop, update the user factors and item factors
+	 * @param list the randomly generated index list
+	 */
 	private void iterate(ArrayList<Integer> list){
 		
 		int user_id, item_id, rating;
@@ -227,7 +282,9 @@ public class BiasedProbabilisticMatrixFactorization implements RatingPredictor{
 		}
 	}
 	
-	
+	/**
+	 * Predict the rating value with given user_id and item_id
+	 */
 	public double predict(int user_id, int item_id, boolean bound){
 		
 		if(user_id >= userFeatures.rows())
@@ -250,13 +307,5 @@ public class BiasedProbabilisticMatrixFactorization implements RatingPredictor{
 		}
 		//System.out.println(result);
 		return result;
-	}
-	
-	public void saveModel(){
-		
-	}
-	
-	public void loadModel(){
-		
 	}
 }
