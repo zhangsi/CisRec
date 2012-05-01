@@ -1,7 +1,7 @@
 package org.cis.util;
 
 /**
- * this class sets vector of matrix to zero
+ * This class sets vector or matrix or tensor to zero
  * 
  * @author Zhang Si (zhangsi.cs@gmail.com)
  *
