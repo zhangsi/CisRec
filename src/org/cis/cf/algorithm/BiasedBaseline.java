@@ -5,26 +5,56 @@ import java.util.Random;
 
 import org.cis.data.Ratings;
 
-
+/**
+ * This class implementing the baseline biased model (equation 1 in SVD++ paper)
+ * 
+ * The origin paper:
+ * 
+ * Yehuda Koren., Factorization meets the neighborhood: A multifaceted collaborative filtering model. 
+ * In Proceedings of the 14th ACM SIGKDD International Conference on
+ * Knowledge Discovery and Data Mining (KDD'08) (2008), 426¨C434.
+ * http://public.research.att.com/~volinsky/netflix/kdd08koren.pdf
+ * 
+ * @author Zhang Si (zhangsi.cs@gmail.com)
+ *
+ */
 public class BiasedBaseline implements RatingPredictor {
-	private Ratings ratings;
+	/** training data set of ratings */
+	Ratings ratings;
 	
-	private int userNumber;
-	private int itemNumber;
+	/** number of users */
+	int userNumber;
+	/** number of items */
+	int itemNumber;
 	
-	private double globalBias;
+	/** global rating average */ 
+	double globalBias;
 	
-	private double[] userBias;
-	private double[] itemBias;
+	/** the user bias parameter */
+	double[] userBias;
+	/** the item bias parameter */
+	double[] itemBias;
 	
-	private double maxIterNumber;
-	private int trainNumber;
+	/** max iteration number */
+	double maxIterNumber;
+	/** the train ratings number */
+	int trainNumber;
 	
-	private double learnRate;
+	/** learing rate for updating parameters */
+	double learnRate;
 	
-	private int maxRating;
-	private int minRating;
+	/** max rating */
+	int maxRating;
+	/** min rating */
+	int minRating;
 	
+	/**
+	 * Construct BiasedBaseline algorithm
+	 * 
+	 * @param ratings
+	 * @param maxIterNumber
+	 * @param learnRate
+	 */
 	public BiasedBaseline(Ratings ratings, int maxIterNumber, double learnRate){
 		this.ratings = ratings;
 		this.userNumber = ratings.totalUserNumber();
@@ -41,6 +71,9 @@ public class BiasedBaseline implements RatingPredictor {
 		itemBias = new double[itemNumber + 1];
 	}
 	
+	/**
+	 * Init model parameters
+	 */
 	private void initModel() {
 		Random rand = new Random();
 		for( int u = 0; u <= userNumber; ++u){
@@ -52,7 +85,9 @@ public class BiasedBaseline implements RatingPredictor {
 		}
 	}
 	
-	@Override
+	/**
+	 * Predict the rating value with given user and item
+	 */
 	public double predict(int user_id, int item_id, boolean bound){
 		
 		double result = userBias[user_id] + itemBias[item_id];
@@ -67,17 +102,27 @@ public class BiasedBaseline implements RatingPredictor {
 		return result;
 	}
 	
+	/**
+	 * Train the BiasedBaseline model
+	 */
 	public void trainModel() {
 		initModel();
 		learnBias();
 	}
 	
+	
+	/**
+	 * Learn the user and item bias with given max iteration number
+	 */
 	private void learnBias(){
 		for(int iter = 1; iter <= maxIterNumber; ++iter){
 			iterate(ratings.getRandomIndex());
 		}
 	}
 	
+	/**
+	 * Update user bias and item bias in each iteration
+	 */
 	private void iterate(ArrayList<Integer> list){
 		int user_id, item_id, rating;
 		double prediction, gradient;

@@ -17,40 +17,87 @@ import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import cern.colt.matrix.impl.SparseDoubleMatrix2D;
 import cern.colt.matrix.linalg.Algebra;
 
+/**
+ * The class implementing the Alternating Least Squares algorithm
+ * 
+ * The origin paper:
+ * 
+ * Yunhong Zhou, Dennis Wilkinson, Robert Schreiber and Rong Pan. 
+ * Large-Scale Parallel Collaborative Filtering for the Netflix Prize.
+ * Proceedings of the 4th international conference on Algorithmic Aspects in Information and Management.
+ * Shanghai, China pp. 337-348, 2008.
+ * http://www.hpl.hp.com/personal/Robert_Schreiber/papers/2008%20AAIM%20Netflix/netflix_aaim08(submitted).pdf
+ *
+ * 
+ * @author Zhang Si (zhangsi.cs@gmail.com)
+ *
+ */
 public class AlternatingLeastSquares implements RatingPredictor{
+	
+	/** training data set of ratings */
 	Ratings ratings;
 
+	/** training data set represented by sparse matrix */
 	SparseDoubleMatrix2D trainMatrix;
+	/** indicator of training sparse matrix */
 	SparseDoubleMatrix2D logitMatrix;
 	
+	/** user factors */
 	DenseDoubleMatrix2D userFeatures;
+	/** item factors */
 	DenseDoubleMatrix2D itemFeatures;
 	
+	/** sub user factor */
 	DoubleMatrix2D subUserFeatures;
+	/** sub item factor */
 	DoubleMatrix2D subItemFeatures;
 	
+	/** vector of a user */
 	DoubleMatrix1D Ri;
+	/** vector of an item */
 	DoubleMatrix1D Rj;
 	
+	/** eye matrix */
 	DoubleMatrix2D E;
 	
+	/** the ratings number involved with the user */
 	DenseDoubleMatrix1D userRateNumber;
+	/** the ratings number involved with the item */
 	DenseDoubleMatrix1D itemRatedNumber;
 	
+	/** number of users */
 	int userNumber;
+	/** number of items */
 	int itemNumber;
 	
+	/** number of latent features */
 	int featureNumber;
 	
+	/** regularization of user factors */
 	double userReg;
+	/** regularization of item factors */
 	double itemReg;
 	
+	/** max iteration number */
 	int maxIterNumber;
 	
+	/** global rating average */ 
 	double globalBias;
+	
+	/** max rating */
 	int maxRating;
+	/** min rating */
 	int minRating;
 	
+	/**
+	 * Construct ALS algorithm 
+	 * 
+	 * @param ratings
+	 * @param featureNumber
+	 * @param userReg
+	 * @param itemReg
+	 * @param maxIterNumber
+	 */
 	public AlternatingLeastSquares(Ratings ratings, int featureNumber,
 			double userReg, double itemReg, int maxIterNumber) {
 		this.ratings = ratings;
@@ -80,6 +127,9 @@ public class AlternatingLeastSquares implements RatingPredictor{
 		convertData();
 	}
 	
+	/**
+	 * Convert training data from Ratings to sparse matrix
+	 */
 	private void convertData(){
 		int count = ratings.getCount();
 		for( int index = 0; index != count; ++index){
@@ -89,6 +139,9 @@ public class AlternatingLeastSquares implements RatingPredictor{
 		ratings.clear();
 	}
 	
+	/**
+	 * Init model parameters
+	 */
 	private void initModel(){
 		Random rand = new Random();
 		rand.setSeed(0);
@@ -106,24 +159,35 @@ public class AlternatingLeastSquares implements RatingPredictor{
 		}
 	}
 	
+	/**
+	 * Learn the user and item factors with given max iteration number
+	 */
 	private void learnFeatures(){
 		for(int iter = 1; iter <= maxIterNumber; ++iter){
 			iterate();
 		}
 	}
 	
+	/**
+	 * Update user factors and item factors in each iteration
+	 */
 	private void iterate(){
 		genU();
 		genM();
 	}
 	
+	/**
+	 * Train the ALS model
+	 */
 	public void trainModel() {
 		initModel();
 		learnFeatures();
 		
 	}
 
-	@Override
+	/**
+	 * Predict the rating value with given user and item
+	 */
 	public double predict(int user_id, int item_id, boolean bound) {
 		
 		Algebra algebra = new Algebra();
@@ -140,7 +204,10 @@ public class AlternatingLeastSquares implements RatingPredictor{
 		return result;
 	}
 	
-
+	/**
+	 * Generate the sub item factors involved with the given user
+	 * @param i the given user id
+	 */
 	public void gensubItemFeatures(int i) {
 		IntArrayList indexList = new IntArrayList();
 		DoubleArrayList valueList = new DoubleArrayList();
@@ -158,6 +225,10 @@ public class AlternatingLeastSquares implements RatingPredictor{
 		subItemFeatures = itemFeatures.viewSelection(rowIndexes, columnIndexes);
 	}
 
+	/**
+	 * Generate the sub user factors involved with the given item
+	 * @param j the given item id
+	 */
 	public void gensubUserFeatures(int j) {
 		IntArrayList indexList = new IntArrayList();
 		DoubleArrayList valueList = new DoubleArrayList();
@@ -175,6 +246,10 @@ public class AlternatingLeastSquares implements RatingPredictor{
 		subUserFeatures = userFeatures.viewSelection(rowIndexes, columnIndexes);
 	}
 
+	/**
+	 * Generate the vector contains the items involved with the given user
+	 * @param i the user id
+	 */
 	public void genRi(int i) {
 		Ri = trainMatrix.viewRow(i).viewSelection(
 				new DoubleProcedure() {
@@ -184,7 +259,10 @@ public class AlternatingLeastSquares implements RatingPredictor{
 				});
 	}
 
-
+	/**
+	 * Generate the vector contains the users involved with the give item
+	 * @param j the item id
+	 */
 	public void genRj(int j) {
 		Rj = trainMatrix.viewColumn(j).viewSelection(
 				new DoubleProcedure() {
@@ -194,6 +272,11 @@ public class AlternatingLeastSquares implements RatingPredictor{
 				});
 	}
 
+	/**
+	 * Update the factor of given user
+	 * @param i the user id
+	 * @return the updated user factor
+	 */
 	public DoubleMatrix1D genUi(int i) {
 		Algebra algebra = new Algebra(0);
 		Algebra algebra2 = new Algebra(0);
@@ -210,7 +293,11 @@ public class AlternatingLeastSquares implements RatingPredictor{
 						algebra.mult(subItemFeatures, Ri));
 	}
 
-
+	/**
+	 * Update the factor of given item
+	 * @param j the item id
+	 * @return the updated item factor
+	 */
 	public DoubleMatrix1D genMj(int j) {
 		if (logitMatrix.viewColumn(j).cardinality() == 0)
 			return DoubleFactory1D.sparse.make(featureNumber, 0);
@@ -226,6 +313,9 @@ public class AlternatingLeastSquares implements RatingPredictor{
 				algebra.mult(subUserFeatures, Rj));
 	}
 
+	/**
+	 * update user factors
+	 */
 	public void genU() {
 		int i, j;
 		DoubleMatrix1D Ui;
@@ -238,6 +328,9 @@ public class AlternatingLeastSquares implements RatingPredictor{
 		}
 	}
 
+	/**
+	 * update item factors
+	 */
 	public void genM() {
 		int i, j;
 		DoubleMatrix1D Mj;

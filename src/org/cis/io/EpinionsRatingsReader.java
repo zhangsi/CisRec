@@ -6,9 +6,17 @@ import java.io.IOException;
 
 import org.cis.data.Ratings;
 
+/**
+ * This class read the epinions ratings data
+ * 
+ * @author Zhang Si (zhangsi.cs@gmail.com)
+ *
+ */
 public class EpinionsRatingsReader implements RatingsReader{
 
-	@Override
+	/**
+	 * Read epinions ratings data from text file
+	 */
 	public Ratings read(String filePath) {
 		Ratings ratings = new Ratings();
 		

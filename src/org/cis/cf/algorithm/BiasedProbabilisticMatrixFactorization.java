@@ -8,6 +8,11 @@ import org.cis.data.Ratings;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import cern.colt.matrix.linalg.Algebra;
 
+/**
+ * 
+ * @author Zhang Si (zhangsi.cs@gmail.com)
+ *
+ */
 public class BiasedProbabilisticMatrixFactorization implements RatingPredictor{
 	
 	DenseDoubleMatrix2D userFeatures;

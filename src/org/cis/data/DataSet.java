@@ -1,5 +1,11 @@
 package org.cis.data;
 
+/**
+ * This interface defining the functions of data set
+ * 
+ * @author Zhang Si (zhangsi.cs@gmail.com)
+ *
+ */
 public interface DataSet {
 	
 	/**
@@ -19,6 +25,7 @@ public interface DataSet {
 	
 	/**
 	 * Get index for a given user and item
+	 * 
 	 * @param user_id: the user ID
 	 * @param item_id: the item ID
 	 * @return: the index of the first event encountered that matches the user ID and item ID

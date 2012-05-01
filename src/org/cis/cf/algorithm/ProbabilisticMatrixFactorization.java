@@ -8,27 +8,56 @@ import org.cis.data.Ratings;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import cern.colt.matrix.linalg.Algebra;
 
+/**
+ * This class implementing the Probabilistic Matrix Factorization
+ * 
+ * the origin paper:
+ * 
+ * Salakhutdinov, R., & Mnih, A. (2008). Probabilistic matrix factorization. 
+ * Advances in Neural Information Processing Systems 20. Cambridge, MA: MIT Press
+ * http://www.cs.utoronto.ca/~amnih/papers/pmf.pdf	
+ * 
+ * @author Zhang Si (zhangsi.cs@gmail.com)
+ *
+ */
 public class ProbabilisticMatrixFactorization implements RatingPredictor{
 	
-	private DenseDoubleMatrix2D userFeatures;
-	private DenseDoubleMatrix2D itemFeatures;
-	private Ratings ratings;
-	private int maxRating;
-	private int minRating;
+	/** user factors */
+	DenseDoubleMatrix2D userFeatures;
+	/** item factors */
+	DenseDoubleMatrix2D itemFeatures;
 	
-	private int trainNumber;
+	/** training data set of ratings */
+	Ratings ratings;
 	
-	private double globalBias;
+	/** max rating */
+	int maxRating;
+	/** min rating */
+	int minRating;
 	
-	private double learnRate;
-	private double userReg;
-	private double itemReg;
+	/** number of training ratings */
+	int trainNumber;
 	
-	private int featureNumber;
-	private int maxIterNumber;
+	/** global average of all the ratings */ 
+	double globalBias;
 	
-	private int userNumber;
-	private int itemNumber;
+	/** learning rate of the model parameters */
+	double learnRate;
+	
+	/** regularization of user factors */
+	double userReg;
+	/** regularization of item factors */
+	double itemReg;
+	
+	/** number of latent factors */
+	int featureNumber;
+	/** max iteration number */
+	int maxIterNumber;
+	
+	/** number of users */
+	int userNumber;
+	/** number of items */
+	int itemNumber;
 	
 	/**
 	 * @param learnRate the learnRate to set
@@ -58,6 +87,12 @@ public class ProbabilisticMatrixFactorization implements RatingPredictor{
 		this.maxIterNumber = maxIterNumber;
 	}
 	
+	/**
+	 * Construct PMF algorithm
+	 * 
+	 * @param ratings
+	 * @param featureNumber
+	 */
 	public ProbabilisticMatrixFactorization(Ratings ratings, int featureNumber){
 		this.ratings = ratings;
 		this.globalBias = ratings.averageRating();
@@ -75,6 +110,16 @@ public class ProbabilisticMatrixFactorization implements RatingPredictor{
 		this.itemFeatures = new DenseDoubleMatrix2D(itemNumber + 1, featureNumber);
 	}
 	
+	/**
+	 * Construct PMF algorithm
+	 * 
+	 * @param ratings
+	 * @param featureNumber
+	 * @param learnRate
+	 * @param userReg
+	 * @param itemReg
+	 * @param maxIterNumber
+	 */
 	public ProbabilisticMatrixFactorization(Ratings ratings, int featureNumber, double learnRate,
 			double userReg, double itemReg, int maxIterNumber) {
 		this.ratings = ratings;
@@ -98,6 +143,9 @@ public class ProbabilisticMatrixFactorization implements RatingPredictor{
 		this.itemFeatures = new DenseDoubleMatrix2D(itemNumber + 1, featureNumber);
 	}
 	
+	/**
+	 * Init the model parameters of PMF
+	 */
 	private void initModel(){
 		Random rand = new Random();
 		
@@ -114,18 +162,28 @@ public class ProbabilisticMatrixFactorization implements RatingPredictor{
 		}
 	}
 	
+	/**
+	 * Train the model of PMF
+	 */
 	public void trainModel(){
 		
 		initModel();
 		learnFeatures();
 	}
 	
+	/**
+	 * Update the parameter with given max iteration number
+	 */
 	public void learnFeatures(){
 		for(int iter = 1; iter <= maxIterNumber; ++iter){
 			iterate(ratings.getRandomIndex());
 		}
 	}
 	
+	/**
+	 * In a iteration loop, update the user factors and item factors
+	 * @param list the randomly generated index list
+	 */
 	public void iterate(ArrayList<Integer> list){
 		
 		int user_id, item_id, rating;
@@ -152,7 +210,9 @@ public class ProbabilisticMatrixFactorization implements RatingPredictor{
 		}
 	}
 	
-	
+	/**
+	 * Predict the rating value with given user_id and item_id
+	 */
 	public double predict(int user_id, int item_id, boolean bound){
 		
 		if(user_id >= userFeatures.rows())
@@ -173,13 +233,5 @@ public class ProbabilisticMatrixFactorization implements RatingPredictor{
 		}
 		
 		return result;
-	}
-	
-	public void saveModel(){
-		
-	}
-	
-	public void loadModel(){
-		
 	}
 }

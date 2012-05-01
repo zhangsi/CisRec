@@ -6,9 +6,17 @@ import java.io.IOException;
 
 import org.cis.data.Ratings;
 
+/**
+ * This class reads the movielens ratings data
+ * 
+ * @author Zhang Si (zhangsi.cs@gmail.com)
+ *
+ */
 public class MovielensRatingsReader implements RatingsReader{
 
-	@Override
+	/**
+	 * Read movielens ratings data from text file
+	 */
 	public Ratings read(String filePath) {
 		Ratings ratings = new Ratings();
 		

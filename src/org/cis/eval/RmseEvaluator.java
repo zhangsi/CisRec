@@ -3,9 +3,17 @@ package org.cis.eval;
 import org.cis.cf.algorithm.RatingPredictor;
 import org.cis.data.Ratings;
 
+/**
+ * This class implementing the RMSE metric 
+ * 
+ * @author Zhang Si (zhangsi.cs@gmail.com)
+ *
+ */
 public class RmseEvaluator implements Evaluator {
 
-	@Override
+	/**
+	 * Calculate the RMSE performance of a RatingPredictor
+	 */
 	public double evaluate(RatingPredictor rp, Ratings ratings) {
 		int count = ratings.getCount();
 		

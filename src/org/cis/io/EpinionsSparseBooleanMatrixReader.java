@@ -6,9 +6,18 @@ import java.io.IOException;
 
 import org.cis.matrix.SparseBooleanMatrix;
 
+/**
+ * This class reads the epinions social network data
+ * 
+ * @author Zhang Si (zhangsi.cs@gmail.com)
+ *
+ */
 public class EpinionsSparseBooleanMatrixReader implements
 		SparseBooleanMatrixReader {
 
+	/**
+	 * Read the epinions social network data from text file
+	 */
 	public SparseBooleanMatrix read(String filePath, int dim1, int dim2) {
 		SparseBooleanMatrix matrix = new SparseBooleanMatrix(dim1, dim2);
 		

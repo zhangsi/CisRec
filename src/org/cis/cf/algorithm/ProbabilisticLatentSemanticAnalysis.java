@@ -6,33 +6,66 @@ import java.util.Random;
 import org.cis.data.Ratings;
 
 
+/**
+ * This class implementing the Probabilistic Latent Semantic Analysis for Collaborative Filtering algorithm
+ * 
+ * The origin paper:
+ * 
+ * T. Hofmann, Latent Semantic Models for Collaborative Filtering,
+ * ACM Transactions on Information Systems 22 (2004), 89C115.
+ * http://comminfo.rutgers.edu/~muresan/IR/Docs/Articles/toisHofmann2004.pdf
+ * 
+ * 
+ * @author Zhang Si (zhangsi.cs@gmail.com)
+ *
+ */
 public class ProbabilisticLatentSemanticAnalysis implements RatingPredictor {
+	
+	/** training data set of ratings */
 	Ratings ratings;
 	
+	/** number of users */
 	int userNumber;
+	/** number of items */
 	int itemNumber;
 	
-	int hidVariables; //hidden variables
+	/** number of hidden variables z */
+	int hidVariables;
 	
+	/** the grade of rating, such as "5" in netflix */
 	int rating;
+	
+	/** max iteration number */
 	int maxIterNumber;
 
+	/** the beta parameter */
 	double beta;
 	
-	//P(Z|U)
+	/** P(Z|U) */
 	double[][] Puz; 
-	//Q(Z|U,Y,T)  U:user Y:item T:rate, Z:hidden variables
-	//public static HashMap<Pair, Double> Quyz;
+	
+	/** Q(Z|U,Y,T)  U:user Y:item T:rate, Z:hidden variables */
 	
 	double[][][] Q;
 	
-	// average, variables
+	/** mean and  variables for gaussian */
 	double[][][] ud2yz;  	
 
-	
+
+	/** the training data set indexed by user */
 	int[][] userInfo;
+	/** the training data set indexed by item */ 
 	int[][] itemInfo;
 	
+	/**
+	 * Construct PLSA algorithm
+	 * 
+	 * @param ratings
+	 * @param hidVariables
+	 * @param rating
+	 * @param beta
+	 * @param maxIterNumber
+	 */
 	public ProbabilisticLatentSemanticAnalysis(Ratings ratings, int hidVariables, int rating, double beta, int maxIterNumber){	
 		this.ratings = ratings;
 		this.hidVariables = hidVariables;
@@ -44,14 +77,10 @@ public class ProbabilisticLatentSemanticAnalysis implements RatingPredictor {
 		this.itemNumber = ratings.totalItemNumber();
 		
 		Puz = new double[userNumber + 1][hidVariables]; 
-		//Q(Z|U,Y,T)  U:user Y:item T:rate, Z:hidden variables
-		//public static HashMap<Pair, Double> Quyz;
 		
 		Q = new double[userNumber + 1][][];
 		
-		// average, variables
 		ud2yz = new double[itemNumber + 1][hidVariables][2];  
-		
 		
 		userInfo = new int[userNumber + 1][];
 		itemInfo = new int[itemNumber + 1][];
@@ -59,6 +88,9 @@ public class ProbabilisticLatentSemanticAnalysis implements RatingPredictor {
 		convertData();
 	}
 	
+	/**
+	 * Convert training data from ratings to user indexed data and item indexed data
+	 */
 	private void convertData() {
 		ArrayList<ArrayList<Integer>> userList = ratings.getIndicesByUser();
 		for( int u = 1; u <= userNumber; ++u){
@@ -92,6 +124,9 @@ public class ProbabilisticLatentSemanticAnalysis implements RatingPredictor {
 		ratings.clear();
 	}
 	
+	/**
+	 * Init the model parameters
+	 */
 	private void initModel(){
 		Random random = new Random();
 		
@@ -119,11 +154,17 @@ public class ProbabilisticLatentSemanticAnalysis implements RatingPredictor {
 		}
 	}
 	
+	/**
+	 * train the PLSA model
+	 */
 	public void trainModel() {
 		initModel();
 		learnParameters();
 	}
 	
+	/**
+	 * update parameter with given max iteration number
+	 */
 	private void learnParameters(){
 		for(int iter = 1; iter <= maxIterNumber; ++iter){
 			eStep();
@@ -131,8 +172,11 @@ public class ProbabilisticLatentSemanticAnalysis implements RatingPredictor {
 		}
 	}
 	
+	/**
+	 * E step of the PLSA algorithm
+	 * @return
+	 */
 	private double eStep() {
-		
 		double ans = 0;
 		for(int user = 1; user <= userNumber; user++) {
 			int numRate = userInfo[user].length;
@@ -158,6 +202,9 @@ public class ProbabilisticLatentSemanticAnalysis implements RatingPredictor {
 		return ans;
 	}
 	
+	/**
+	 * M step of the PLSA algorithm
+	 */
 	private void mStep() {
 		
 		//update P(Z|U)
@@ -238,7 +285,13 @@ public class ProbabilisticLatentSemanticAnalysis implements RatingPredictor {
 		
 	}
 	
-	//P(V:U,variance)
+	/**
+	 * compute the mean and variables of gaussian
+	 * @param rate
+	 * @param item
+	 * @param label
+	 * @return
+	 */
 	private double Pvyz(int rate, int item, int label) {
 		
 		double value = ud2yz[item][label][0];
@@ -250,7 +303,9 @@ public class ProbabilisticLatentSemanticAnalysis implements RatingPredictor {
 		return ans;
 	}
 
-	@Override
+	/**
+	 * Predict the rating value with given user and item
+	 */
 	public double predict(int user_id, int item_id, boolean bound) {
 		double ans = 0;
 		

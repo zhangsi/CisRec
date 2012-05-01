@@ -6,9 +6,17 @@ import java.io.IOException;
 
 import org.cis.data.Ratings;
 
+/**
+ * This class reads the netflix ratings data
+ * 
+ * @author Zhang Si (zhangsi.cs@gmail.com)
+ *
+ */
 public class NetflixRatingsReader implements RatingsReader{
 
-	@Override
+	/**
+	 * Read netflix ratings data from text file
+	 */
 	public Ratings read(String filePath) {
 		Ratings ratings = new Ratings();
 		
