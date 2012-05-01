@@ -9,12 +9,32 @@ import org.cis.matrix.SparseBooleanMatrix;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import cern.colt.matrix.linalg.Algebra;
 
+/**
+ * This class implementing the Social Matrix Factorization for Social Recommendation
+ * 
+ * The origin paper:
+ * 
+ * 
+ * @author Zhang Si (zhangsi.cs@gmail.com)
+ *
+ */
 public class SocialMatrixFactorization extends BiasedProbabilisticMatrixFactorization {
 
-	private SparseBooleanMatrix user_connections;
-	private SparseBooleanMatrix user_reverse_connections;
-	private double socialReg;
+	/** user social network */
+	SparseBooleanMatrix user_connections;
+	/** user social network reversed */
+	SparseBooleanMatrix user_reverse_connections;
+	/** social regularization */
+	double socialReg;
 	
+	/**
+	 * Construct SocialMF algorithm
+	 * 
+	 * @param ratings
+	 * @param featureNumber
+	 * @param user_connections
+	 * @param socialReg
+	 */
 	public SocialMatrixFactorization(Ratings ratings, int featureNumber, 
 			SparseBooleanMatrix user_connections, double socialReg) {
 		super(ratings, featureNumber);
@@ -22,6 +42,22 @@ public class SocialMatrixFactorization extends BiasedProbabilisticMatrixFactoriz
 		this.user_reverse_connections = user_connections.transpose();
 		this.socialReg = socialReg;
 	}
+	
+	/**
+	 * Construct SocialMF algorithm
+	 * 
+	 * @param ratings
+	 * @param featureNumber
+	 * @param learnRate
+	 * @param userReg
+	 * @param itemReg
+	 * @param biasLearnRate
+	 * @param biasUserReg
+	 * @param biasItemReg
+	 * @param maxIterNumber
+	 * @param user_connections
+	 * @param socialReg
+	 */
 	public SocialMatrixFactorization(Ratings ratings, int featureNumber,
 			double learnRate, double userReg, double itemReg, 
 			double biasLearnRate, double biasUserReg, double biasItemReg,
@@ -34,6 +70,9 @@ public class SocialMatrixFactorization extends BiasedProbabilisticMatrixFactoriz
 
 	}
 	
+	/**
+	 * Init the model parameters for SocialMF model
+	 */
 	private void initModel(){
 		Random rand = new Random();
 		
@@ -52,18 +91,27 @@ public class SocialMatrixFactorization extends BiasedProbabilisticMatrixFactoriz
 		}
 	}
 	
+	/**
+	 * Update the parameter with given max iteration number
+	 */
 	private void learnFeatures(){
 		for(int iter = 1; iter <= maxIterNumber; ++iter){
 			iterate(ratings.getRandomIndex());
 		}
 	}
 	
+	/**
+	 * Train the model of Social
+	 */
 	public void trainModel(){
 		initModel();
 		learnFeatures();
 	}
 	
-	
+	/**
+	 * In an iteration loop, update the user factors and item factors
+	 * @param list the randomly generated index list
+	 */
 	private void iterate(ArrayList<Integer> list){
 		DenseDoubleMatrix2D user_factors_gradient = new DenseDoubleMatrix2D( userNumber + 1, featureNumber);
 		DenseDoubleMatrix2D item_factors_gradient = new DenseDoubleMatrix2D( itemNumber + 1, featureNumber);
@@ -193,6 +241,9 @@ public class SocialMatrixFactorization extends BiasedProbabilisticMatrixFactoriz
 		
 	}
 	
+	/**
+	 * Predict the rating value with given user_id and item_id
+	 */
 	public double predict(int user_id, int item_id, boolean bound){
 		
 		if(user_id >= userFeatures.rows())

@@ -33,7 +33,12 @@ The implemented algorithms include:
 	Shanghai, China pp. 337-348, 2008.
 	http://www.hpl.hp.com/personal/Robert_Schreiber/papers/2008%20AAIM%20Netflix/netflix_aaim08(submitted).pdf
 
-
+(6) M. Jamali and M. Ester, A Matrix Factorization Technique with Trust Propagation for 
+    Recommendation in Social Networks, in ACM Conference on Recommender Systems (RecSys'10), 
+    Barcelona, Spain, September 2010.
+    http://dl.acm.org/citation.cfm?id=1864736
+    
+    
 others: biased baseline, global average, user average, item average and the variants of (1)(2)(3)(4)
 
 

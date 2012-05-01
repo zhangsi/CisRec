@@ -9,39 +9,89 @@ import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import cern.colt.matrix.linalg.Algebra;
 
+/**
+ * This class implementing the SVD++ algorithm for Collaborative Filtering
+ * 
+ * The origin paper:
+ * 
+ * Yehuda Koren., Factorization meets the neighborhood: A multifaceted collaborative filtering model. 
+ * In Proceedings of the 14th ACM SIGKDD International Conference on
+ * Knowledge Discovery and Data Mining (KDD'08) (2008), 426¨C434.
+ * http://public.research.att.com/~volinsky/netflix/kdd08koren.pdf
+ * 
+ * 
+ * @author Zhang Si (zhangsi.cs@gmail.com)
+ *
+ */
 public class SVDPlusPlus implements RatingPredictor{
 	
+	/** user factors */
 	DenseDoubleMatrix2D userFeatures;
+	/** item factors */
 	DenseDoubleMatrix2D itemFeatures;
+	/** user factors */
 	DenseDoubleMatrix2D p;
+	/** item factors */
 	DenseDoubleMatrix2D y;
+	
+	/** training data set of ratings */
 	Ratings ratings;
+	/** max rating */
 	int maxRating;
+	/** min rating */
 	int minRating;
 	
+	/** number of training ratings */
 	int trainNumber;
 	
+	/** global average of all the ratings */ 
 	double globalBias;
 	
+	/** learning rate of the model parameters */
 	double learnRate;
+	/** regularization of user factors */
 	double userReg;
+	/** regularization of item factors */
 	double itemReg;
 	
-	double userBias[];
-	double itemBias[];
+	/** the user bias parameter */
+	double[] userBias;
+	/** the item bias parameter */
+	double[] itemBias;
 	
+	/** learning rate for bias parameters */
 	double biasLearnRate;
+	/** regularization of user bias */
 	double biasUserReg;
+	/** regularization of item bias */
 	double biasItemReg;
 	
+	/** number of latent factors */
 	int featureNumber;
+	/** max iteration number */
 	int maxIterNumber;
 	
+	/** number of users */
 	int userNumber;
+	/** number of items */
 	int itemNumber;
 	
+	/** who rated what relationship */
 	int whoRatedWhat[][];
 	
+	/**
+	 * Construct SVD++ algorithm
+	 * 
+	 * @param ratings
+	 * @param featureNumber
+	 * @param learnRate
+	 * @param userReg
+	 * @param itemReg
+	 * @param biasLearnRate
+	 * @param biasUserReg
+	 * @param biasItemReg
+	 * @param maxIterNumber
+	 */
 	public SVDPlusPlus(Ratings ratings, int featureNumber,
 			double learnRate, double userReg, double itemReg, 
 			double biasLearnRate, double biasUserReg, double biasItemReg,
@@ -80,6 +130,9 @@ public class SVDPlusPlus implements RatingPredictor{
 		this.itemBias     = new double[itemNumber + 1];
 	}
 	
+	/**
+	 * Get the implicit feedback information from the training data 
+	 */
 	private void getImplicitInfo(){
 		whoRatedWhat = new int[userNumber+1][];
 		ArrayList<Integer> list = new ArrayList<Integer>();
@@ -92,6 +145,9 @@ public class SVDPlusPlus implements RatingPredictor{
 		}
 	}
 	
+	/**
+	 * Init the model parameters
+	 */
 	private void initModel(){
 		Random rand = new Random();
 		
@@ -111,6 +167,9 @@ public class SVDPlusPlus implements RatingPredictor{
 		}
 	}
 	
+	/**
+	 * Train the model of SVD++
+	 */
 	public void trainModel(){
 		initModel();
 		getImplicitInfo();
@@ -118,12 +177,19 @@ public class SVDPlusPlus implements RatingPredictor{
 		calcUserFeatures();
 	}
 	
+	/**
+	 * Update the parameter with given max iteration number
+	 */
 	private void learnFeatures(){
 		for(int iter = 1; iter <= maxIterNumber; ++iter){
 			iterate(ratings.getRandomIndex());
 		}
 	}
 
+	/**
+	 * In an iteration loop, update the user factors and item factors
+	 * @param list the randomly generated index list
+	 */
 	private void iterate(ArrayList<Integer> list){
 		int user_id, item_id, rating;
 		double err, prediction;
@@ -172,6 +238,9 @@ public class SVDPlusPlus implements RatingPredictor{
 		}
 	}
 	
+	/**
+	 * Generate the user factors from p and y
+	 */
 	private void calcUserFeatures(){
 		int user_id;
 		for(user_id = 1; user_id <= userNumber; ++user_id){
@@ -191,7 +260,9 @@ public class SVDPlusPlus implements RatingPredictor{
 		}
 	}
 
-	@Override
+	/**
+	 * Predict the rating value with given user_id and item_id
+	 */
 	public double predict(int user_id, int item_id, boolean bound){
 		
 		if(user_id >= p.rows())
