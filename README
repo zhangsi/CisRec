@@ -35,4 +35,8 @@ The implemented algorithms include:
 
 
 others: biased baseline, global average, user average, item average and the variants of (1)(2)(3)(4)
-	
+
+
+========================================================
+
+Dependence: colt (http://acs.lbl.gov/software/colt/)
