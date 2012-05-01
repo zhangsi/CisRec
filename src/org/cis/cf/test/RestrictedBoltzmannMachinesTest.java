@@ -4,6 +4,12 @@ import org.cis.cf.algorithm.RestrictedBoltzmannMachines;
 import org.cis.data.Ratings;
 import org.cis.io.NetflixRatingsReader;
 
+/**
+ * This class tests the Restricted Boltzmann Machines algorithm
+ * 
+ * @author Zhang Si (zhangsi.cs@gmail.com)
+ *
+ */
 public class RestrictedBoltzmannMachinesTest {
 	public static void main(String args[]){
 		

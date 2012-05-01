@@ -5,6 +5,12 @@ import org.cis.data.Ratings;
 import org.cis.eval.RmseEvaluator;
 import org.cis.io.MovielensRatingsReader;
 
+/**
+ * This class test the User Average algorithm
+ * 
+ * @author Zhang Si (zhangsi.cs@gmail.com)
+ *
+ */
 public class UserAverageTest {
 	public static void main(String args[]){
 		

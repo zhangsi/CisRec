@@ -5,6 +5,12 @@ import org.cis.data.Ratings;
 import org.cis.eval.RmseEvaluator;
 import org.cis.io.MovielensRatingsReader;
 
+/**
+ * This class tests the Alternating  LeastSquares algorithm
+ * 
+ * @author Zhang Si (zhangsi.cs@gmail.com)
+ *
+ */
 public class AlternatingLeastSquaresTest {
 	public static void main(String args[]){
 		

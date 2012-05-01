@@ -5,6 +5,12 @@ import org.cis.data.Ratings;
 import org.cis.eval.RmseEvaluator;
 import org.cis.io.MovielensRatingsReader;
 
+/**
+ * This class tests the Item Average algorithm
+ * 
+ * @author Zhang Si (zhangsi.cs@gmail.com)
+ *
+ */
 public class ItemAverageTest {
 	public static void main(String args[]){
 		

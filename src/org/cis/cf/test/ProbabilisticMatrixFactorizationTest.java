@@ -5,6 +5,11 @@ import org.cis.data.Ratings;
 import org.cis.eval.RmseEvaluator;
 import org.cis.io.MovielensRatingsReader;
 
+/**
+ * This class tests the Probabilistic Matrix Factorization algorithm
+ * @author Zhang Si (zhangsi.cs@gmail.com)
+ *
+ */
 public class ProbabilisticMatrixFactorizationTest {
 	public static void main(String args[]){
 		

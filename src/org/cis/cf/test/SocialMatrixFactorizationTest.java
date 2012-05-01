@@ -8,6 +8,12 @@ import org.cis.io.EpinionsRatingsReader;
 import org.cis.io.EpinionsSparseBooleanMatrixReader;
 import org.cis.matrix.SparseBooleanMatrix;
 
+/**
+ * This class tests the Social Matrix Factorization algorithm
+ * 
+ * @author Zhang Si (zhangsi.cs@gmail.com)
+ *
+ */
 public class SocialMatrixFactorizationTest {
 	public static void main(String args[]){
 		
